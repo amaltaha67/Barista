@@ -14,7 +14,7 @@ class DatabaseHelper(context: Context) :
     companion object {
         private const val DATABASE_VERSION = 1 // Database version
         private const val DATABASE_NAME = "CoffeeRecipesDatabase" // Database name
-        private const val TABLE_RECIPE = "Recipes" // Table Name
+        private const val TABLE_RECIPE = "Recipe" // Table Name
 
         //All the Columns names
         private const val KEY_ID = "_id"
@@ -31,7 +31,7 @@ class DatabaseHelper(context: Context) :
                 + KEY_TITLE + " TEXT,"
                 + KEY_IMAGE + " TEXT,"
                 + KEY_DESCRIPTION + " TEXT,"
-                + KEY_DATE + " TEXT,")
+                + KEY_DATE + " TEXT)")
         db?.execSQL(CREATE_RECIPE_TABLE)
     }
 

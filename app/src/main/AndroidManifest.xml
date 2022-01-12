@@ -29,6 +29,7 @@
             android:screenOrientation="fullSensor"
             android:label="Add Recipe Here"
             android:theme="@style/CustomNoActionBarTheme"
+
             >
         </activity>
         <activity android:name=".HomeActivity"
@@ -36,7 +37,6 @@
             android:label="Barista Recipes"
           >
         </activity>
-
     </application>
 
 </manifest>

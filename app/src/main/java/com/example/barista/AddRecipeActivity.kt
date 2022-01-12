@@ -161,8 +161,8 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                             Intent.ACTION_PICK,
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                         )
-                        startActivityIfNeeded(galleryIntent, GALLERY)
-                        //startActivityForResult(galleryIntent, GALLERY)
+                        //startActivityIfNeeded(galleryIntent, GALLERY)
+                        startActivityForResult(galleryIntent, GALLERY)
                     }
                 }
 
@@ -192,8 +192,8 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                     // Here after all the permission are granted launch the CAMERA to capture an image.
                     if (report!!.areAllPermissionsGranted()) {
                         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                        startActivityIfNeeded(intent, CAMERA)
-                       // startActivityForResult(intent, CAMERA)
+                        //startActivityIfNeeded(intent, CAMERA)
+                        startActivityForResult(intent, CAMERA)
                     }
                 }
 
