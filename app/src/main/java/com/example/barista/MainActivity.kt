@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
         }
+        startService(Intent(this, MusicService::class.java))
     }
 
 

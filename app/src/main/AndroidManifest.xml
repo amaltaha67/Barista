@@ -37,6 +37,10 @@
             android:label="Barista Recipes"
           >
         </activity>
+        <service
+            android:name=".MusicService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>
