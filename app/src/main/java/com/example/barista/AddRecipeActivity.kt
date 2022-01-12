@@ -13,10 +13,7 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
@@ -35,10 +32,12 @@ import java.util.*
 class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
     private var cal = Calendar.getInstance()
     private lateinit var dateSetListener : DatePickerDialog.OnDateSetListener
-    private val GALLERY = 1
-    private val CAMERA = 2
-    private val IMAGE_DIRECTORY = "CoffeeRecipeImages"
-
+    private var saveImageToInternalStorage: Uri? = null
+    companion object {
+        private const val GALLERY = 1
+        private const val CAMERA = 2
+        private const val IMAGE_DIRECTORY = "CoffeeRecipeImages"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_recipe)
@@ -62,14 +61,20 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
 
         val addImage : TextView = findViewById(R.id.tv_add_image)
         addImage.setOnClickListener(this)
+
+        val saveInput : Button = findViewById(R.id.btn_save)
+        saveInput.setOnClickListener(this)
     }
 
 
     override fun onClick(v: View?) {
+        val titleED : EditText = findViewById(R.id.et_title)
+        val descriptionED : EditText = findViewById(R.id.et_description)
+        val dateEd : EditText = findViewById(R.id.et_date)
         when (v!!.id) {
             R.id.et_date -> {
                 DatePickerDialog(
-                    this@AddRecipeActivity,
+                    this,
                     dateSetListener, // This is the variable which have created globally and initialized in setupUI method.
                     // set DatePickerDialog to point to today's date when it loads up
                     cal.get(Calendar.YEAR), // Here the cal instance is created globally and used everywhere in the class where it is required.
@@ -94,6 +99,42 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                 pictureDialog.show()
             }
 
+            R.id.btn_save -> {
+
+                when {
+                    titleED.text.isNullOrEmpty() -> {
+                        Toast.makeText(this, "Please enter title", Toast.LENGTH_SHORT).show()
+                    }
+                    descriptionED.text.isNullOrEmpty() -> {
+                        Toast.makeText(this, "Please enter description", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    saveImageToInternalStorage == null -> {
+                        Toast.makeText(this, "Please add image", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+
+                        // Assigning all the values to data model class.
+                        val happyPlaceModel = Recipe(
+                            0,
+                            titleED.text.toString(),
+                            saveImageToInternalStorage.toString(),
+                            descriptionED.text.toString(),
+                            dateEd.text.toString()
+                        )
+
+                        // Here we initialize the database handler class.
+                        val dbHandler = DatabaseHelper(this)
+                        val addHappyPlace = dbHandler.addRecipe(happyPlaceModel)
+                        if (addHappyPlace > 0) {
+                            Toast.makeText(this, "added successfully", Toast.LENGTH_SHORT).show()
+                                setResult(Activity.RESULT_OK);
+                                finish()//finishing activity
+                        }
+
+                    }
+                }
+            }
         }
 
     }
@@ -206,7 +247,7 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            val place_image : ImageView = findViewById(R.id.iv_place_image)
+            val placeImage : ImageView = findViewById(R.id.iv_place_image)
             if (requestCode == GALLERY) {
                 if (data != null) {
                     val contentURI = data.data
@@ -216,12 +257,12 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                         val selectedImageBitmap =
                             MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
 
-                        val saveImageToInternalStorage =
+                         saveImageToInternalStorage =
                             saveImageToInternalStorage(selectedImageBitmap)
                         Log.e("Saved Image : ", "Path :: $saveImageToInternalStorage")
 
 
-                        place_image!!.setImageBitmap(selectedImageBitmap) // Set the selected image from GALLERY to imageView.
+                        placeImage.setImageBitmap(selectedImageBitmap) // Set the selected image from GALLERY to imageView.
                     } catch (e: IOException) {
                         e.printStackTrace()
                         Toast.makeText(this@AddRecipeActivity, "Failed!", Toast.LENGTH_SHORT)
@@ -236,7 +277,7 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                     saveImageToInternalStorage(thumbnail)
                 Log.e("Saved Image : ", "Path :: $saveImageToInternalStorage")
 
-                place_image!!.setImageBitmap(thumbnail) // Set to the imageView.
+                placeImage.setImageBitmap(thumbnail) // Set to the imageView.
             }
         }
         else if (resultCode == Activity.RESULT_CANCELED) {
