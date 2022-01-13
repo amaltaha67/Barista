@@ -62,5 +62,37 @@ class DatabaseHelper(context: Context) :
         db.close() // Closing database connection
         return result
     }
+    @SuppressLint("Range")
+    fun getRecipesList(): ArrayList<Recipe> {
+
+        // A list is initialize using the data model class in which we will add the values from cursor.
+        val coffeeRecipesList: ArrayList<Recipe> = ArrayList()
+
+        val selectQuery = "SELECT  * FROM $TABLE_RECIPE" // Database select query
+
+        val db = this.readableDatabase
+
+        try {
+            val cursor: Cursor = db.rawQuery(selectQuery, null)
+            if (cursor.moveToFirst()) {
+                do {
+                    val place = Recipe(
+                        cursor.getInt(cursor.getColumnIndex(KEY_ID)),
+                        cursor.getString(cursor.getColumnIndex(KEY_TITLE)),
+                        cursor.getString(cursor.getColumnIndex(KEY_IMAGE)),
+                        cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)),
+                        cursor.getString(cursor.getColumnIndex(KEY_DATE))
+                    )
+                    coffeeRecipesList.add(place)
+
+                } while (cursor.moveToNext())
+            }
+            cursor.close()
+        } catch (e: SQLiteException) {
+            db.execSQL(selectQuery)
+            return ArrayList()
+        }
+        return coffeeRecipesList
+    }
 
 }
