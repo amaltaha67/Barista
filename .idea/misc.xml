@@ -5,10 +5,13 @@
       <map>
         <entry key="..\:/Users/AMAL.T/AndroidStudioProjects/Barista/app/src/main/res/drawable-v24/shape_button_rounded.xml" value="0.1" />
         <entry key="..\:/Users/AMAL.T/AndroidStudioProjects/Barista/app/src/main/res/drawable-v24/shape_image_view_border.xml" value="0.1" />
+        <entry key="..\:/Users/AMAL.T/AndroidStudioProjects/Barista/app/src/main/res/drawable/ic_action_add_24dp.xml" value="0.1" />
         <entry key="..\:/Users/AMAL.T/AndroidStudioProjects/Barista/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.1" />
         <entry key="..\:/Users/AMAL.T/AndroidStudioProjects/Barista/app/src/main/res/layout/activity_add_recipe.xml" value="0.1884297520661157" />
         <entry key="..\:/Users/AMAL.T/AndroidStudioProjects/Barista/app/src/main/res/layout/activity_home.xml" value="0.14817629179331307" />
         <entry key="..\:/Users/AMAL.T/AndroidStudioProjects/Barista/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/AMAL.T/AndroidStudioProjects/Barista/app/src/main/res/layout/activity_recipes_info.xml" value="0.13722826086956522" />
+        <entry key="..\:/Users/AMAL.T/AndroidStudioProjects/Barista/app/src/main/res/layout/items.xml" value="0.13722826086956522" />
       </map>
     </option>
   </component>

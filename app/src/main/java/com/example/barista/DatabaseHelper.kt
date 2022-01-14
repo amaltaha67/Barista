@@ -94,5 +94,37 @@ class DatabaseHelper(context: Context) :
         }
         return coffeeRecipesList
     }
+    /**
+     * Function to update record
+     */
+    fun updateRecipe(happyPlace: Recipe): Int {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(KEY_TITLE, happyPlace.title) // HappyPlaceModelClass TITLE
+        contentValues.put(KEY_IMAGE, happyPlace.image) // HappyPlaceModelClass IMAGE
+        contentValues.put(
+            KEY_DESCRIPTION,
+            happyPlace.description
+        ) // HappyPlaceModelClass DESCRIPTION
+        contentValues.put(KEY_DATE, happyPlace.date) // HappyPlaceModelClass DATE
+        // Updating Row
+        val success =
+            db.update(TABLE_RECIPE, contentValues, KEY_ID + "=" + happyPlace.id, null)
+        //2nd argument is String containing nullColumnHack
 
+        db.close() // Closing database connection
+        return success
+    }
+
+    /**
+     * Function to delete happy place details.
+     */
+    fun deleteRecipe(happyPlace: Recipe): Int {
+        val db = this.writableDatabase
+        // Deleting Row
+        val success = db.delete(TABLE_RECIPE, KEY_ID + "=" + happyPlace.id, null)
+        //2nd argument is String containing nullColumnHack
+        db.close() // Closing database connection
+        return success
+    }
 }

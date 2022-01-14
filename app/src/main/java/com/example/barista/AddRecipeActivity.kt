@@ -22,6 +22,7 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import kotlinx.android.synthetic.main.activity_add_recipe.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -38,6 +39,8 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
         private const val CAMERA = 2
         private const val IMAGE_DIRECTORY = "CoffeeRecipeImages"
     }
+    private var coffeeRecipe: Recipe? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_recipe)
@@ -54,6 +57,23 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
                 updateDateInView()
 
+        }
+        if (intent.hasExtra(HomeActivity.EXTRA_RECIPE_DETAILS)) {
+            coffeeRecipe =
+                intent.getSerializableExtra(HomeActivity.EXTRA_RECIPE_DETAILS) as Recipe
+        }
+        if (coffeeRecipe != null) {
+            supportActionBar?.title = "Edit Happy Place"
+
+            et_title.setText(coffeeRecipe!!.title)
+            et_description.setText(coffeeRecipe!!.description)
+            et_date.setText(coffeeRecipe!!.date)
+
+            saveImageToInternalStorage = Uri.parse(coffeeRecipe!!.image)
+
+            iv_place_image.setImageURI(saveImageToInternalStorage)
+
+            btn_save.text = "UPDATE"
         }
 
         val etDate : EditText = findViewById(R.id.et_date)
@@ -116,7 +136,7 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
 
                         // Assigning all the values to data model class.
                         val happyPlaceModel = Recipe(
-                            0,
+                            if (coffeeRecipe == null) 0 else coffeeRecipe!!.id,
                             titleED.text.toString(),
                             saveImageToInternalStorage.toString(),
                             descriptionED.text.toString(),
@@ -125,11 +145,21 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
 
                         // Here we initialize the database handler class.
                         val dbHandler = DatabaseHelper(this)
-                        val addHappyPlace = dbHandler.addRecipe(happyPlaceModel)
-                        if (addHappyPlace > 0) {
-                            Toast.makeText(this, "added successfully", Toast.LENGTH_SHORT).show()
+
+                        if (coffeeRecipe == null) {
+                            val addHappyPlace = dbHandler.addRecipe(happyPlaceModel)
+
+                            if (addHappyPlace > 0) {
                                 setResult(Activity.RESULT_OK);
                                 finish()//finishing activity
+                            }
+                        } else {
+                            val updateHappyPlace = dbHandler.updateRecipe(happyPlaceModel)
+
+                            if (updateHappyPlace > 0) {
+                                setResult(Activity.RESULT_OK);
+                                finish()//finishing activity
+                            }
                         }
 
                     }
@@ -161,8 +191,8 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                             Intent.ACTION_PICK,
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                         )
-                        //startActivityIfNeeded(galleryIntent, GALLERY)
-                        startActivityForResult(galleryIntent, GALLERY)
+                        startActivityIfNeeded(galleryIntent, GALLERY)
+                        //startActivityForResult(galleryIntent, GALLERY)
                     }
                 }
 
@@ -192,8 +222,8 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                     // Here after all the permission are granted launch the CAMERA to capture an image.
                     if (report!!.areAllPermissionsGranted()) {
                         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                        //startActivityIfNeeded(intent, CAMERA)
-                        startActivityForResult(intent, CAMERA)
+                        startActivityIfNeeded(intent, CAMERA)
+                        //startActivityForResult(intent, CAMERA)
                     }
                 }
 
@@ -270,10 +300,9 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
             } else if (requestCode == CAMERA) {
-
                 val thumbnail: Bitmap = data!!.extras!!.get("data") as Bitmap // Bitmap from camera
 
-                val saveImageToInternalStorage =
+                 saveImageToInternalStorage =
                     saveImageToInternalStorage(thumbnail)
                 Log.e("Saved Image : ", "Path :: $saveImageToInternalStorage")
 

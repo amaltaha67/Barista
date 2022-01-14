@@ -37,6 +37,11 @@
             android:label="Barista Recipes"
           >
         </activity>
+        <activity
+            android:name=".RecipeInformationActivity"
+            android:label="COFFEE RECIPE DETAIL"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomNoActionBarTheme"/>
         <service
             android:name=".MusicService"
             android:enabled="true"
