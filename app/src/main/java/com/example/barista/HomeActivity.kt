@@ -23,11 +23,10 @@ class HomeActivity : AppCompatActivity()  {
         }
         getRecipesListFromLocalDB()
     }
-    // Call Back method  to get the Message form other Activity
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // check if the request code is same as what is passed  here it is 'ADD_PLACE_ACTIVITY_REQUEST_CODE'
         if (requestCode == ADD_PLACE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 getRecipesListFromLocalDB()
@@ -37,9 +36,6 @@ class HomeActivity : AppCompatActivity()  {
         }
     }
 
-    /**
-     * A function to get the list of happy place from local database.
-     */
     private fun getRecipesListFromLocalDB() {
 
         val dbHandler = DatabaseHelper(this)
@@ -56,9 +52,6 @@ class HomeActivity : AppCompatActivity()  {
         }
     }
 
-    /**
-     * A function to populate the recyclerview to the UI.
-     */
     private fun setupHappyPlacesRecyclerView(happyPlacesList: ArrayList<Recipe>) {
 
         recipes_list.layoutManager = LinearLayoutManager(this)
@@ -71,7 +64,7 @@ class HomeActivity : AppCompatActivity()  {
             RecipeAdapter.OnClickListener {
             override fun onClick(position: Int, model: Recipe) {
                 val intent = Intent(this@HomeActivity, RecipeInformationActivity::class.java)
-                intent.putExtra(EXTRA_RECIPE_DETAILS, model) // Passing the complete serializable data class to the detail activity using intent.
+                intent.putExtra(EXTRA_RECIPE_DETAILS, model)
                 startActivity(intent)
             }
         })
@@ -94,7 +87,7 @@ class HomeActivity : AppCompatActivity()  {
                 val adapter = recipes_list.adapter as RecipeAdapter
                 adapter.removeAt(viewHolder.adapterPosition)
 
-                getRecipesListFromLocalDB() // Gets the latest list from the local database after item being delete from it.
+                getRecipesListFromLocalDB()
             }
         }
         val deleteItemTouchHelper = ItemTouchHelper(deleteSwipeHandler)

@@ -7,11 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-// For detail explanation of this class you can look at below link.
-// https://medium.com/@kitek/recyclerview-swipe-to-delete-easier-than-you-thought-cff67ff5e5f6
-/**
- * A abstract class which we will use for edit feature.
- */
+
 abstract class SwipeToEditCallback(context: Context) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
 
     private val editIcon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_edit_24)
@@ -23,12 +19,6 @@ abstract class SwipeToEditCallback(context: Context) : ItemTouchHelper.SimpleCal
 
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-        /**
-         * To disable "swipe" for specific item return 0 here.
-         * For example:
-         * if (viewHolder?.itemViewType == YourAdapter.SOME_TYPE) return 0
-         * if (viewHolder?.adapterPosition == 0) return 0
-         */
         if (viewHolder.adapterPosition == 10) return 0
         return super.getMovementFlags(recyclerView, viewHolder)
     }
@@ -52,12 +42,10 @@ abstract class SwipeToEditCallback(context: Context) : ItemTouchHelper.SimpleCal
             return
         }
 
-        // Draw the green edit background
         background.color = backgroundColor
         background.setBounds(itemView.left + dX.toInt(), itemView.top, itemView.left, itemView.bottom)
         background.draw(c)
 
-        // Calculate position of edit icon
         val editIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
         val editIconMargin = (itemHeight - intrinsicHeight)
         val editIconLeft = itemView.left + editIconMargin - intrinsicWidth

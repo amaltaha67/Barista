@@ -95,9 +95,8 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
             R.id.et_date -> {
                 DatePickerDialog(
                     this,
-                    dateSetListener, // This is the variable which have created globally and initialized in setupUI method.
-                    // set DatePickerDialog to point to today's date when it loads up
-                    cal.get(Calendar.YEAR), // Here the cal instance is created globally and used everywhere in the class where it is required.
+                    dateSetListener,
+                    cal.get(Calendar.YEAR),
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)
                 ).show()
@@ -111,7 +110,6 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                     pictureDialogItems
                 ) { dialog, which ->
                     when (which) {
-                        // Here we have create the methods for image selection from GALLERY
                         0 -> choosePhotoFromGallery()
                         1 -> takePhotoFromCamera()
                     }
@@ -134,7 +132,6 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     else -> {
 
-                        // Assigning all the values to data model class.
                         val happyPlaceModel = Recipe(
                             if (coffeeRecipe == null) 0 else coffeeRecipe!!.id,
                             titleED.text.toString(),
@@ -143,7 +140,6 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                             dateEd.text.toString()
                         )
 
-                        // Here we initialize the database handler class.
                         val dbHandler = DatabaseHelper(this)
 
                         if (coffeeRecipe == null) {
@@ -183,16 +179,12 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
             )
             .withListener(object : MultiplePermissionsListener {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
-
-                    // Here after all the permission are granted launch the gallery to select and image.
                     if (report!!.areAllPermissionsGranted()) {
-
                         val galleryIntent = Intent(
                             Intent.ACTION_PICK,
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                         )
                         startActivityIfNeeded(galleryIntent, GALLERY)
-                        //startActivityForResult(galleryIntent, GALLERY)
                     }
                 }
 
@@ -219,11 +211,9 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
             )
             .withListener(object : MultiplePermissionsListener {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
-                    // Here after all the permission are granted launch the CAMERA to capture an image.
                     if (report!!.areAllPermissionsGranted()) {
                         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                         startActivityIfNeeded(intent, CAMERA)
-                        //startActivityForResult(intent, CAMERA)
                     }
                 }
 
@@ -238,39 +228,25 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
     }
     private fun saveImageToInternalStorage(bitmap: Bitmap): Uri {
 
-        // Get the context wrapper instance
         val wrapper = ContextWrapper(applicationContext)
 
-        // Initializing a new file
-        // The bellow line return a directory in internal storage
-        /**
-         * The Mode Private here is
-         * File creation mode: the default mode, where the created file can only
-         * be accessed by the calling application (or all applications sharing the
-         * same user ID).
-         */
         var file = wrapper.getDir(IMAGE_DIRECTORY, Context.MODE_PRIVATE)
 
-        // Create a file to save the image
         file = File(file, "${UUID.randomUUID()}.jpg")
 
         try {
-            // Get the file output stream
-            val stream: OutputStream = FileOutputStream(file)
 
-            // Compress bitmap
+            val stream: OutputStream = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
 
-            // Flush the stream
             stream.flush()
 
-            // Close stream
             stream.close()
+
         } catch (e: IOException) { // Catch the exception
             e.printStackTrace()
         }
 
-        // Return the saved image uri
         return Uri.parse(file.absolutePath)
     }
 
@@ -282,7 +258,6 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                 if (data != null) {
                     val contentURI = data.data
                     try {
-                        // Here this is used to get an bitmap from URI
                         @Suppress("DEPRECATION")
                         val selectedImageBitmap =
                             MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
@@ -291,8 +266,8 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                             saveImageToInternalStorage(selectedImageBitmap)
                         Log.e("Saved Image : ", "Path :: $saveImageToInternalStorage")
 
-
-                        placeImage.setImageBitmap(selectedImageBitmap) // Set the selected image from GALLERY to imageView.
+                        // Set the selected image from GALLERY to imageView.
+                        placeImage.setImageBitmap(selectedImageBitmap)
                     } catch (e: IOException) {
                         e.printStackTrace()
                         Toast.makeText(this@AddRecipeActivity, "Failed!", Toast.LENGTH_SHORT)
@@ -300,13 +275,13 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
             } else if (requestCode == CAMERA) {
-                val thumbnail: Bitmap = data!!.extras!!.get("data") as Bitmap // Bitmap from camera
+                val thumbnail: Bitmap = data!!.extras!!.get("data") as Bitmap
 
                  saveImageToInternalStorage =
                     saveImageToInternalStorage(thumbnail)
                 Log.e("Saved Image : ", "Path :: $saveImageToInternalStorage")
 
-                placeImage.setImageBitmap(thumbnail) // Set to the imageView.
+                placeImage.setImageBitmap(thumbnail)
             }
         }
         else if (resultCode == Activity.RESULT_CANCELED) {
