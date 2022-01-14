@@ -147,14 +147,14 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
 
                             if (addHappyPlace > 0) {
                                 setResult(Activity.RESULT_OK);
-                                finish()//finishing activity
+                                finish()
                             }
                         } else {
                             val updateHappyPlace = dbHandler.updateRecipe(happyPlaceModel)
 
                             if (updateHappyPlace > 0) {
                                 setResult(Activity.RESULT_OK);
-                                finish()//finishing activity
+                                finish()
                             }
                         }
 
@@ -198,9 +198,6 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
             .check()
     }
 
-    /**
-     * A method is used  asking the permission for camera and storage and image capturing and selection from Camera.
-     */
     private fun takePhotoFromCamera() {
 
         Dexter.withActivity(this)
@@ -243,7 +240,7 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
 
             stream.close()
 
-        } catch (e: IOException) { // Catch the exception
+        } catch (e: IOException) {
             e.printStackTrace()
         }
 
@@ -266,7 +263,6 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                             saveImageToInternalStorage(selectedImageBitmap)
                         Log.e("Saved Image : ", "Path :: $saveImageToInternalStorage")
 
-                        // Set the selected image from GALLERY to imageView.
                         placeImage.setImageBitmap(selectedImageBitmap)
                     } catch (e: IOException) {
                         e.printStackTrace()
