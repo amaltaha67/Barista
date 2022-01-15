@@ -13,25 +13,25 @@ class RecipeInformationActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_recipes_info)
 
-        var happyPlaceDetailModel: Recipe? = null
+        var recipeDetailModel: Recipe? = null
 
         if (intent.hasExtra(HomeActivity.EXTRA_RECIPE_DETAILS)) {
-            happyPlaceDetailModel =
+            recipeDetailModel =
                 intent.getSerializableExtra(HomeActivity.EXTRA_RECIPE_DETAILS) as Recipe
         }
 
-        if (happyPlaceDetailModel != null) {
+        if (recipeDetailModel != null) {
 
             setSupportActionBar(toolbar_happy_place_detail)
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-            supportActionBar!!.title = happyPlaceDetailModel.title
+            supportActionBar!!.title = recipeDetailModel.title
 
             toolbar_happy_place_detail.setNavigationOnClickListener {
                 onBackPressed()
             }
 
-            iv_place_image.setImageURI(Uri.parse(happyPlaceDetailModel.image))
-            tv_description.text = happyPlaceDetailModel.description
+            iv_place_image.setImageURI(Uri.parse(recipeDetailModel.image))
+            tv_description.text = recipeDetailModel.description
         }
 
     }

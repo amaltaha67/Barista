@@ -27,7 +27,7 @@ class HomeActivity : AppCompatActivity()  {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == ADD_PLACE_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == ADD_RECIPE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 getRecipesListFromLocalDB()
             } else {
@@ -40,24 +40,24 @@ class HomeActivity : AppCompatActivity()  {
 
         val dbHandler = DatabaseHelper(this)
 
-        val getHappyPlacesList = dbHandler.getRecipesList()
+        val getRecipesList = dbHandler.getRecipesList()
 
-        if (getHappyPlacesList.size > 0) {
+        if (getRecipesList.size > 0) {
+            setupRecipeRecyclerView(getRecipesList)
             recipes_list.visibility = View.VISIBLE
             empty_list.visibility = View.GONE
-            setupHappyPlacesRecyclerView(getHappyPlacesList)
         } else {
             recipes_list.visibility = View.GONE
             empty_list.visibility = View.VISIBLE
         }
     }
 
-    private fun setupHappyPlacesRecyclerView(happyPlacesList: ArrayList<Recipe>) {
+    private fun setupRecipeRecyclerView(recipesList: ArrayList<Recipe>) {
 
         recipes_list.layoutManager = LinearLayoutManager(this)
         recipes_list.setHasFixedSize(true)
 
-        val placesAdapter = RecipeAdapter(this, happyPlacesList)
+        val placesAdapter = RecipeAdapter(this, recipesList)
         recipes_list.adapter = placesAdapter
 
         placesAdapter.setOnClickListener(object :
@@ -75,7 +75,7 @@ class HomeActivity : AppCompatActivity()  {
                 adapter.notifyEditItem(
                     this@HomeActivity,
                     viewHolder.adapterPosition,
-                    ADD_PLACE_ACTIVITY_REQUEST_CODE
+                    ADD_RECIPE_ACTIVITY_REQUEST_CODE
                 )
             }
         }
@@ -95,7 +95,7 @@ class HomeActivity : AppCompatActivity()  {
     }
 
     companion object {
-        private const val ADD_PLACE_ACTIVITY_REQUEST_CODE = 1
+        private const val ADD_RECIPE_ACTIVITY_REQUEST_CODE = 1
         internal const val EXTRA_RECIPE_DETAILS = "extra_place_details"
     }
 }

@@ -60,7 +60,7 @@ class DatabaseHelper(context: Context) :
     fun getRecipesList(): ArrayList<Recipe> {
 
         val coffeeRecipesList: ArrayList<Recipe> = ArrayList()
-        val selectQuery = "SELECT  * FROM $TABLE_RECIPE" // Database select query
+        val selectQuery = "SELECT  * FROM $TABLE_RECIPE"
         val db = this.readableDatabase
         try {
             val cursor: Cursor = db.rawQuery(selectQuery, null)
@@ -87,27 +87,27 @@ class DatabaseHelper(context: Context) :
 
      //Function to update a recipe
 
-    fun updateRecipe(happyPlace: Recipe): Int {
+    fun updateRecipe(recipe: Recipe): Int {
         val db = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put(KEY_TITLE, happyPlace.title)
-        contentValues.put(KEY_IMAGE, happyPlace.image)
+        contentValues.put(KEY_TITLE, recipe.title)
+        contentValues.put(KEY_IMAGE, recipe.image)
         contentValues.put(
             KEY_DESCRIPTION,
-            happyPlace.description
+            recipe.description
         )
-        contentValues.put(KEY_DATE, happyPlace.date)
+        contentValues.put(KEY_DATE, recipe.date)
         val success =
-            db.update(TABLE_RECIPE, contentValues, KEY_ID + "=" + happyPlace.id, null)
+            db.update(TABLE_RECIPE, contentValues, KEY_ID + "=" + recipe.id, null)
         db.close()
         return success
     }
 
      // Function to delete a recipe.
 
-    fun deleteRecipe(happyPlace: Recipe): Int {
+    fun deleteRecipe(recipe: Recipe): Int {
         val db = this.writableDatabase
-        val success = db.delete(TABLE_RECIPE, KEY_ID + "=" + happyPlace.id, null)
+        val success = db.delete(TABLE_RECIPE, KEY_ID + "=" + recipe.id, null)
         db.close()
         return success
     }

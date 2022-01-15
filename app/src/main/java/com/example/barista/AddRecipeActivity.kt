@@ -52,10 +52,10 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
         }
         dateSetListener = DatePickerDialog.OnDateSetListener {
                 view, year, month, dayOfMonth ->
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, month)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                updateDateInView()
+            cal.set(Calendar.YEAR, year)
+            cal.set(Calendar.MONTH, month)
+            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            updateDateInView()
 
         }
         if (intent.hasExtra(HomeActivity.EXTRA_RECIPE_DETAILS)) {
@@ -63,7 +63,7 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                 intent.getSerializableExtra(HomeActivity.EXTRA_RECIPE_DETAILS) as Recipe
         }
         if (coffeeRecipe != null) {
-            supportActionBar?.title = "Edit Happy Place"
+            supportActionBar?.title = "Edit Recipe"
 
             et_title.setText(coffeeRecipe!!.title)
             et_description.setText(coffeeRecipe!!.description)
@@ -131,8 +131,9 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                         Toast.makeText(this, "Please add image", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
+                        val dbHandler = DatabaseHelper(this)
 
-                        val happyPlaceModel = Recipe(
+                        val recipeModel = Recipe(
                             if (coffeeRecipe == null) 0 else coffeeRecipe!!.id,
                             titleED.text.toString(),
                             saveImageToInternalStorage.toString(),
@@ -140,19 +141,17 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                             dateEd.text.toString()
                         )
 
-                        val dbHandler = DatabaseHelper(this)
-
                         if (coffeeRecipe == null) {
-                            val addHappyPlace = dbHandler.addRecipe(happyPlaceModel)
+                            val addRecipe = dbHandler.addRecipe(recipeModel)
 
-                            if (addHappyPlace > 0) {
+                            if (addRecipe > 0) {
                                 setResult(Activity.RESULT_OK);
                                 finish()
                             }
                         } else {
-                            val updateHappyPlace = dbHandler.updateRecipe(happyPlaceModel)
+                            val updateRecipe = dbHandler.updateRecipe(recipeModel)
 
-                            if (updateHappyPlace > 0) {
+                            if (updateRecipe > 0) {
                                 setResult(Activity.RESULT_OK);
                                 finish()
                             }
@@ -259,7 +258,7 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
                         val selectedImageBitmap =
                             MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
 
-                         saveImageToInternalStorage =
+                        saveImageToInternalStorage =
                             saveImageToInternalStorage(selectedImageBitmap)
                         Log.e("Saved Image : ", "Path :: $saveImageToInternalStorage")
 
@@ -273,7 +272,7 @@ class AddRecipeActivity : AppCompatActivity(), View.OnClickListener {
             } else if (requestCode == CAMERA) {
                 val thumbnail: Bitmap = data!!.extras!!.get("data") as Bitmap
 
-                 saveImageToInternalStorage =
+                saveImageToInternalStorage =
                     saveImageToInternalStorage(thumbnail)
                 Log.e("Saved Image : ", "Path :: $saveImageToInternalStorage")
 
